@@ -1,7 +1,24 @@
-class Person:
+from abc import ABC, abstractmethod
+
+# Custom Exceptions
+class InvalidAgeError(Exception):
+    pass
+
+class InvalidGradeError(Exception):
+    pass
+
+# Abstract Class
+class Person(ABC):
+    _total_persons = 0
+    
     def __init__(self, name, age):
         self.__name = name
-        self.__age = age
+        self.set_age(age)
+        Person._total_persons += 1
+
+    @abstractmethod
+    def introduce(self):
+        return f"Hello, my name is {self.__name} and I am {self.__age} years old."
 
     def get_name(self):
         return self.__name
@@ -13,22 +30,38 @@ class Person:
         return self.__age
 
     def set_age(self, age):
+        if age < 0:
+            raise InvalidAgeError("Age cannot be negative")
         self.__age = age
+        
 
-    def introduce(self):
-        return f"My name is {self.__name} and I am {self.__age} years old."
+    @staticmethod
+    def total_persons():
+        return Person._total_persons
 
+    @classmethod
+    def increment_total(cls):
+        cls._total_persons += 1
 
-class Student(Person):
+# Interface for common behavior
+class Role(ABC):
+    @abstractmethod
+    def get_role(self):
+        pass
+
+# Student Class
+class Student(Person, Role):
     def __init__(self, name="Placeholder Name", age=0, grade="none"):
         super().__init__(name, age)
-        self.__grade = grade
-        self.__courses = []  # List of enrolled courses
+        self.set_grade(grade)
+        self.__courses = []
 
     def get_grade(self):
         return self.__grade
 
     def set_grade(self, grade):
+        if grade not in ["none", "A", "B", "C", "D", "F"]:
+            raise InvalidGradeError("Invalid grade")
         self.__grade = grade
 
     def introduce(self):
@@ -40,8 +73,11 @@ class Student(Person):
     def list_courses(self):
         return [course.get_course_name() for course in self.__courses]
 
+    def get_role(self):
+        return "Student"
 
-class Teacher(Person):
+# Teacher Class
+class Teacher(Person, Role):
     def __init__(self, name, age, subject):
         super().__init__(name, age)
         self.__subject = subject
@@ -55,8 +91,11 @@ class Teacher(Person):
     def introduce(self):
         return f"{super().introduce()} Teaching {self.__subject}."
 
+    def get_role(self):
+        return "Teacher"
 
-class Admin(Person):
+# Admin Class
+class Admin(Person, Role):
     def __init__(self, name, age, department):
         super().__init__(name, age)
         self.__department = department
@@ -70,7 +109,10 @@ class Admin(Person):
     def introduce(self):
         return f"{super().introduce()} Working in {self.__department} Department."
 
+    def get_role(self):
+        return "Admin"
 
+# Courses Class
 class Courses:
     def __init__(self, course_name, grade, teacher):
         self.__course_name = course_name
@@ -101,8 +143,8 @@ class Courses:
 
 # Example Usage
 students = [
-    Student("Utkarsh", 22, 12),
-    Student("Sohan", 19, 10)
+    Student("Utkarsh", 22, "A"),
+    Student("Sohan", 19, "B")
 ]
 
 teachers = [
@@ -126,3 +168,6 @@ for student in students:
 # Print admin information
 admin = Admin("Prem", 30, "Admission Committee")
 print(admin.introduce())
+
+
+
