@@ -1,0 +1,23 @@
+{
+    "products": [
+      {
+        "product_id": "P001",
+        "name": "Laptop",
+        "price": 799.99,
+        "in_stock": true
+      },
+      {
+        "product_id": "P002",
+        "name": "Smartphone",
+        "price": 599.99,
+        "in_stock": false
+      },
+      {
+        "product_id": "P003",
+        "name": "Headphones",
+        "price": 149.99,
+        "in_stock": true
+      }
+    ]
+  }
+  

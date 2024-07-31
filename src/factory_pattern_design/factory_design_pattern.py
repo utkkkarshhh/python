@@ -9,6 +9,16 @@ class Transport(ABC):
     def deliver(self):
         pass
     
+class TransportFactory:
+    @staticmethod
+    def create_transport(transport_type, capacity):
+        if transport_type == "truck":
+            return Truck(capacity)
+        elif transport_type == "ship":
+            return Ship(capacity)
+        else:
+            raise ValueError("Invalid Transport Type") 
+    
 class Truck(Transport):
     def __init__(self, capacity):
         super().__init__()
@@ -32,30 +42,22 @@ class Ship(Transport):
         return f"Delivering goods by sea using a ship with tonnage {self.getTonnage()}!"
     
 
-class Factory:
-    @staticmethod
-    def create_transport(transport_type, capacity):
-        if transport_type == "truck":
-            return Truck(capacity)
-        elif transport_type == "ship":
-            return Ship(capacity)
-        else:
-            raise ValueError("Invalid Transport Type") 
-        
-
-
 try:
-    truck = Factory.create_transport("truck", 20)
+    truck = TransportFactory.create_transport("truck", 20)
     print(truck.deliver())
     
-    ship = Factory.create_transport("ship", 40)
+    ship = TransportFactory.create_transport("ship", 40)
     print(ship.deliver())
     
-    car = Factory.create_transport("car", 100)
+    car = TransportFactory.create_transport("car", 100)
     print(car.deliver())
     
 except ValueError as e:
     print(f"Caught Error: {e}")
+
+
+
+
     
         
 
